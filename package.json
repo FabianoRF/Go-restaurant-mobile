@@ -7,8 +7,9 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
-  },
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "server": "json-server server.json -p 3333 --host 192.168.1.58"
+    },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.10.0",

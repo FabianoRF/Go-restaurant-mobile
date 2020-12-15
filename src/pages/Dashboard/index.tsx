@@ -54,12 +54,42 @@ const Dashboard: React.FC = () => {
   const navigation = useNavigation();
 
   async function handleNavigate(id: number): Promise<void> {
-    // Navigate do ProductDetails page
+    navigation.navigate('FoodDetails', { id });
   }
 
   useEffect(() => {
     async function loadFoods(): Promise<void> {
-      // Load Foods from API
+      const response = await api.get('/foods', {
+        params: {
+          name_like: searchValue,
+          category_like: selectedCategory,
+        },
+      });
+
+      // if (searchValue) {
+      //   response = await api.get('/foods', {
+      //     params: {
+      //       name_like: searchValue,
+      //     },
+      //   });
+      // } else if (selectedCategory) {
+      //   response = await api.get('/foods', {
+      //     params: {
+      //       category_like: selectedCategory,
+      //     },
+      //   });
+      // } else {
+      //   response = await api.get('/foods');
+      // }
+
+      const formattedFodds = response.data.map((food: Food) => {
+        return {
+          ...food,
+          formattedPrice: formatValue(Number(food.price)),
+        };
+      });
+
+      setFoods(formattedFodds);
     }
 
     loadFoods();
@@ -67,14 +97,22 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadCategories(): Promise<void> {
-      // Load categories from API
+      const response = await api.get('/categories');
+
+      setCategories(response.data);
     }
 
     loadCategories();
   }, []);
 
   function handleSelectCategory(id: number): void {
-    // Select / deselect category
+    // Select / deselect category'
+    if (id === selectedCategory) {
+      setSelectedCategory(undefined);
+    } else {
+      setSelectedCategory(id);
+      setSearchValue('');
+    }
   }
 
   return (
@@ -98,6 +136,7 @@ const Dashboard: React.FC = () => {
       <ScrollView>
         <CategoryContainer>
           <Title>Categorias</Title>
+
           <CategorySlider
             contentContainerStyle={{
               paddingHorizontal: 20,
